@@ -6,12 +6,6 @@ import 'package:login_flutterapp/screens/welcome_page.dart';
 import 'dart:developer' show log;
 
 class AuthController extends GetxController {
-/*
-1. Responsible for navigating the user to various pages based on user interaction
-2.The authcontroller needs to be accesible from all of the pages, needs to be
- accesible globally the app
-*/
-
   static AuthController instance = Get.find();
   late Rx<User?> _user;
 
@@ -21,12 +15,11 @@ class AuthController extends GetxController {
   void onReady() {
     super.onReady();
     _user = Rx<User?>(auth.currentUser);
-    //our user to be notified by binding the user to the existing stream
     _user.bindStream(
       auth.userChanges(),
     );
     //the above function just binds the changes/notifications to the user from firebase.auth
-    // but then we need to process those changes
+    // but then we need to process those changes using the ever
     ever(_user, _initialScreen);
     //the above function takes in a listener which is the user
     //  and a call back function to call anytime the listener receives any changes
