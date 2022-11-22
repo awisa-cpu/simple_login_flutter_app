@@ -1,9 +1,32 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:login_flutterapp/auth/auth_controller.dart';
 
-class SignUpPage extends StatelessWidget {
+class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
+
+  @override
+  State<SignUpPage> createState() => _SignUpPageState();
+}
+
+class _SignUpPageState extends State<SignUpPage> {
+  late TextEditingController _emailTEC;
+  late TextEditingController _passwordTEC;
+
+  @override
+  void initState() {
+    super.initState();
+    _emailTEC = TextEditingController();
+    _passwordTEC = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _emailTEC.dispose();
+    _passwordTEC.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,6 +89,9 @@ class SignUpPage extends StatelessWidget {
                       ],
                     ),
                     child: TextField(
+                      controller: _emailTEC,
+                      enableSuggestions: false,
+                      autocorrect: false,
                       decoration: InputDecoration(
                         hintText: "Email",
                         prefixIcon: const Icon(
@@ -107,6 +133,10 @@ class SignUpPage extends StatelessWidget {
                       ],
                     ),
                     child: TextField(
+                      obscureText: true,
+                      enableSuggestions: false,
+                      autocorrect: false,
+                      controller: _passwordTEC,
                       decoration: InputDecoration(
                         hintText: "Password",
                         prefixIcon: const Icon(
@@ -140,23 +170,30 @@ class SignUpPage extends StatelessWidget {
             const SizedBox(
               height: 60,
             ),
-            Container(
-              width: w * 0.6,
-              height: h * 0.2,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(30),
-                image: const DecorationImage(
-                  image: AssetImage("img/loginbtn.png"),
-                  fit: BoxFit.cover,
+            GestureDetector(
+              onTap: () {
+                String email = _emailTEC.text;
+                String password = _passwordTEC.text;
+                AuthController.instance.registerUser(email, password);
+              },
+              child: Container(
+                width: w * 0.6,
+                height: h * 0.2,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(30),
+                  image: const DecorationImage(
+                    image: AssetImage("img/loginbtn.png"),
+                    fit: BoxFit.cover,
+                  ),
                 ),
-              ),
-              child: const Center(
-                child: Text(
-                  'Sign up',
-                  style: TextStyle(
-                      fontSize: 36,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white),
+                child: const Center(
+                  child: Text(
+                    'Sign up',
+                    style: TextStyle(
+                        fontSize: 36,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white),
+                  ),
                 ),
               ),
             ),

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:login_flutterapp/auth/auth_controller.dart';
 
 class WelcomePage extends StatelessWidget {
-  const WelcomePage({super.key});
+  String? email;
+  WelcomePage({super.key, this.email});
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +54,7 @@ class WelcomePage extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  "destinyawisa@gmail.com",
+                  email.toString(),
                   style: TextStyle(
                     fontSize: 18,
                     color: Colors.grey.shade500,
@@ -64,23 +66,31 @@ class WelcomePage extends StatelessWidget {
           const SizedBox(
             height: 200,
           ),
-          Container(
-            width: w * 0.6,
-            height: h * 0.2,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(30),
-              image: const DecorationImage(
-                image: AssetImage("img/loginbtn.png"),
-                fit: BoxFit.cover,
+          GestureDetector(
+            onTap: () async {
+              bool ans = await confirmLogout(context);
+              if (ans == true) {
+                AuthController.instance.logOut();
+              }
+            },
+            child: Container(
+              width: w * 0.6,
+              height: h * 0.2,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(30),
+                image: const DecorationImage(
+                  image: AssetImage("img/loginbtn.png"),
+                  fit: BoxFit.cover,
+                ),
               ),
-            ),
-            child: const Center(
-              child: Text(
-                'Sign out',
-                style: TextStyle(
-                    fontSize: 36,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white),
+              child: const Center(
+                child: Text(
+                  'Sign out',
+                  style: TextStyle(
+                      fontSize: 36,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white),
+                ),
               ),
             ),
           ),
@@ -88,4 +98,44 @@ class WelcomePage extends StatelessWidget {
       ),
     );
   }
+}
+
+Future<bool> confirmLogout(BuildContext context) {
+  return showDialog<bool>(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        title: const Text("Confirm Logout"),
+        content: const Text("Do you want to Logout?"),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(true);
+            },
+            child: const Text(
+              "Log out",
+              style: TextStyle(
+                color: Colors.deepOrangeAccent,
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(false);
+            },
+            child: const Text(
+              "Cancel",
+              style: TextStyle(
+                color: Colors.deepOrangeAccent,
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          )
+        ],
+      );
+    },
+  ).then((value) => value ?? false);
 }
